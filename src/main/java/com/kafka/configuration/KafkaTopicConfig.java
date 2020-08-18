@@ -9,6 +9,7 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaAdmin;
 
 import com.kafka.model.type.TopicType;
@@ -32,8 +33,17 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic testTopic() {
-        return new NewTopic(TopicType.TEST_TOPIC.getName(), 
-        		TopicType.TEST_TOPIC.getNumberOfPartition(),
-        		TopicType.TEST_TOPIC.getReplicationFactor());
+        return TopicBuilder.name(TopicType.TEST_TOPIC.getName())
+        		.partitions(TopicType.TEST_TOPIC.getNumberOfPartition())
+        		.replicas(TopicType.TEST_TOPIC.getReplicationFactor())
+        		.build();
+    }
+    
+    @Bean
+    public NewTopic tempTableTopic() {
+    	return TopicBuilder.name(TopicType.TEMP_TABLE_TOPIC.getName())
+        		.partitions(TopicType.TEMP_TABLE_TOPIC.getNumberOfPartition())
+        		.replicas(TopicType.TEMP_TABLE_TOPIC.getReplicationFactor())
+        		.build();
     }
 }

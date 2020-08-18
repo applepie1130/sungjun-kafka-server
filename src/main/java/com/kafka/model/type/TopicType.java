@@ -1,8 +1,5 @@
 package com.kafka.model.type;
 
-import java.util.Optional;
-
-
 /**
  * TopicType
  *  
@@ -11,20 +8,21 @@ import java.util.Optional;
  */
 public enum TopicType {
 	
-	TEST_TOPIC("test-topic", Optional.of(2), Optional.of((short)1), "테스트용 topic")
+	TEST_TOPIC("test-topic", 2, 1, "테스트용 topic"),
+	TEMP_TABLE_TOPIC("temp-table-topic", 2, 1, "mysql temp table topic")
 	;
 
 	private String name;
 	
 	// Topic의 파티션 수
-	private Optional<Integer> numberOfPartition;
+	private Integer numberOfPartition;
 	
 	// Repication 수 
-	private Optional<Short> replicationFactor;
+	private Integer replicationFactor;
 	
 	private String description;
 	
-	private TopicType(String name, Optional<Integer> numberOfPartition, Optional<Short> replicationFactor, String description) {
+	private TopicType(String name, Integer numberOfPartition, Integer replicationFactor, String description) {
 		this.name = name;
 		this.numberOfPartition = numberOfPartition;
 		this.replicationFactor = replicationFactor;
@@ -35,11 +33,11 @@ public enum TopicType {
 		return name;
 	}
 
-	public Optional<Integer> getNumberOfPartition() {
+	public Integer getNumberOfPartition() {
 		return numberOfPartition;
 	}
 
-	public Optional<Short> getReplicationFactor() {
+	public Integer getReplicationFactor() {
 		return replicationFactor;
 	}
 
