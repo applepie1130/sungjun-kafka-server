@@ -14,11 +14,18 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.listener.SeekToCurrentErrorHandler;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
+import org.springframework.retry.backoff.FixedBackOffPolicy;
+import org.springframework.retry.policy.SimpleRetryPolicy;
+import org.springframework.retry.support.RetryTemplate;
 
 import com.kafka.model.entity.TempEntity;
 import com.kafka.model.type.ConsumerGroupType;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 @EnableKafka
 @Configuration
 public class KafkaConsumerConfig {
@@ -74,11 +81,38 @@ public class KafkaConsumerConfig {
 
         return new DefaultKafkaConsumerFactory<>(props);
     }
+    
+    @Bean
+    public RetryTemplate commonRetryTemplate() {
+        RetryTemplate retryTemplate = new RetryTemplate();
+ 
+        FixedBackOffPolicy fixedBackOffPolicy = new FixedBackOffPolicy();
+        fixedBackOffPolicy.setBackOffPeriod(1000l);
+        retryTemplate.setBackOffPolicy(fixedBackOffPolicy);
+ 
+        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy();
+        retryPolicy.setMaxAttempts(3);
+        retryTemplate.setRetryPolicy(retryPolicy);
+ 
+        return retryTemplate;
+    }
+
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerGroup01Factory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(this.consumerGroup01Factory());
+        
+        /**
+         * TODO
+         */
+        factory.setRetryTemplate(this.commonRetryTemplate());
+        factory.setConcurrency(2);
+        factory.setErrorHandler(new SeekToCurrentErrorHandler());
+        factory.setRecoveryCallback(context -> {
+            log.info("consumer retry -" + context.toString());
+            return null;
+        });
         
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         return factory;
@@ -89,6 +123,17 @@ public class KafkaConsumerConfig {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(this.consumerGroup02Factory());
         
+        /**
+         * TODO
+         */
+        factory.setRetryTemplate(this.commonRetryTemplate());
+        factory.setConcurrency(2);
+        factory.setErrorHandler(new SeekToCurrentErrorHandler());
+        factory.setRecoveryCallback(context -> {
+            log.info("consumer retry -" + context.toString());
+            return null;
+        });
+        
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         return factory;
     }
@@ -97,6 +142,17 @@ public class KafkaConsumerConfig {
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerGroup03Factory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(this.consumerGroup03Factory());
+        
+        /**
+         * TODO
+         */
+        factory.setRetryTemplate(this.commonRetryTemplate());
+        factory.setConcurrency(2);
+        factory.setErrorHandler(new SeekToCurrentErrorHandler());
+        factory.setRecoveryCallback(context -> {
+            log.info("consumer retry -" + context.toString());
+            return null;
+        });
         
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         return factory;
