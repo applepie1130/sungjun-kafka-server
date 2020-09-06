@@ -32,10 +32,26 @@ public class KafkaTopicConfig {
     }
 
     @Bean
-    public NewTopic testTopic() {
-        return TopicBuilder.name(TopicType.TEST_TOPIC.getName())
-        		.partitions(TopicType.TEST_TOPIC.getNumberOfPartition())
-        		.replicas(TopicType.TEST_TOPIC.getReplicationFactor())
+    public NewTopic testTopic01() {
+        return TopicBuilder.name(TopicType.TEST_TOPIC_01.getName())
+        		.partitions(TopicType.TEST_TOPIC_01.getNumberOfPartition())
+        		.replicas(TopicType.TEST_TOPIC_01.getReplicationFactor())
+        		.build();
+    }
+    
+    @Bean
+    public NewTopic testTopic02() {
+        return TopicBuilder.name(TopicType.TEST_TOPIC_02.getName())
+        		.partitions(TopicType.TEST_TOPIC_02.getNumberOfPartition())
+        		.replicas(TopicType.TEST_TOPIC_02.getReplicationFactor())
+        		.build();
+    }
+    
+    @Bean
+    public NewTopic testTopic03() {
+        return TopicBuilder.name(TopicType.TEST_TOPIC_03.getName())
+        		.partitions(TopicType.TEST_TOPIC_03.getNumberOfPartition())
+        		.replicas(TopicType.TEST_TOPIC_03.getReplicationFactor())
         		.build();
     }
     

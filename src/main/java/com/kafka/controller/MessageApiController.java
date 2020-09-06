@@ -34,7 +34,9 @@ private final TestProducer testProducer;
 	public ResponseEntity<MessageResponseEntity> send(@RequestParam("msg") String message) {
 		
 		// send message
-		testProducer.sendString(TopicType.TEST_TOPIC, message);
+		testProducer.sendString(TopicType.TEST_TOPIC_01, message);
+		testProducer.sendString(TopicType.TEST_TOPIC_02, message);
+		testProducer.sendString(TopicType.TEST_TOPIC_03, message);
 		
 		return new ResponseEntity<>(MessageResponseEntity.builder()
 									.result(null)
